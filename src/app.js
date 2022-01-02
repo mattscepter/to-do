@@ -8,6 +8,7 @@ const flash = require('connect-flash');
 const expressMySQLSession = require('express-mysql-session');
 const config = require('./config');
 const routes = require('./routes');
+const timeago = require('./lib/handlebars');
 
 require('./lib/passport');
 
@@ -25,7 +26,7 @@ app.engine(
     layoutsDir: path.join(app.get('views'), 'layouts'),
     partialsDir: path.join(app.get('views'), 'partials'),
     extname: '.hbs',
-    helpers: require('./lib/handlebars'),
+    helpers: timeago,
   }),
 );
 app.set('view engine', '.hbs');

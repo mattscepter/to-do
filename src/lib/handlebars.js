@@ -1,7 +1,5 @@
-const format = require('timeago.js');
-
 const timeago = (savedTimestamp) => {
-  return format(savedTimestamp);
+  return new Date(savedTimestamp).toISOString();
 };
 
 module.exports = timeago;
