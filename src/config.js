@@ -1,10 +1,11 @@
 /**
  * Reading Environment Variables
  */
-import { config } from 'dotenv';
-config();
+const dotenv = require('dotenv');
 
-export default {
+dotenv.config();
+
+module.exports = {
   database: {
     connectionLimit: 10,
     host: 'localhost',

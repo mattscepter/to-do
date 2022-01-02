@@ -1,49 +1,46 @@
-import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
+const passport = require('passport');
+const Strategy = require('passport-local');
 
-import pool from "../database";
-import * as helpers from "./helpers";
+const pool = require('../database');
+const { matchPassword, encryptPassword } = require('./helpers');
 
 passport.use(
-  "local.signin",
-  new LocalStrategy(
+  'local.signin',
+  new Strategy(
     {
-      usernameField: "username",
-      passwordField: "password",
+      usernameField: 'username',
+      passwordField: 'password',
       passReqToCallback: true,
     },
     async (req, username, password, done) => {
-      const rows = await pool.query("SELECT * FROM users WHERE username = ?", [
+      const rows = await pool.query('SELECT * FROM users WHERE username = ?', [
         username,
       ]);
       if (rows.length > 0) {
         const user = rows[0];
-        const validPassword = await helpers.matchPassword(
-          password,
-          user.password
-        );
+        const validPassword = await matchPassword(password, user.password);
         if (validPassword) {
-          done(null, user, req.flash("success", "Welcome " + user.username));
+          done(null, user, req.flash('success', 'Welcome ' + user.username));
         } else {
-          done(null, false, req.flash("message", "Incorrect Password"));
+          done(null, false, req.flash('message', 'Incorrect Password'));
         }
       } else {
         return done(
           null,
           false,
-          req.flash("message", "The Username does not exists.")
+          req.flash('message', 'The Username does not exists.'),
         );
       }
-    }
-  )
+    },
+  ),
 );
 
 passport.use(
-  "local.signup",
-  new LocalStrategy(
+  'local.signup',
+  new Strategy(
     {
-      usernameField: "username",
-      passwordField: "password",
+      usernameField: 'username',
+      passwordField: 'password',
       passReqToCallback: true,
     },
     async (req, username, password, done) => {
@@ -55,13 +52,13 @@ passport.use(
         password,
       };
 
-      newUser.password = await helpers.encryptPassword(password);
+      newUser.password = await encryptPassword(password);
       // Saving in the Database
-      const result = await pool.query("INSERT INTO users SET ? ", newUser);
+      const result = await pool.query('INSERT INTO users SET ? ', newUser);
       newUser.id = result.insertId;
       return done(null, newUser);
-    }
-  )
+    },
+  ),
 );
 
 passport.serializeUser((user, done) => {
@@ -69,6 +66,6 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (id, done) => {
-  const rows = await pool.query("SELECT * FROM users WHERE id = ?", [id]);
+  const rows = await pool.query('SELECT * FROM users WHERE id = ?', [id]);
   done(null, rows[0]);
 });

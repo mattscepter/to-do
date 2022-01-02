@@ -1,5 +1,7 @@
-import { format } from "timeago.js";
+const format = require('timeago.js');
 
-export const timeago = (savedTimestamp) => {
+const timeago = (savedTimestamp) => {
   return format(savedTimestamp);
 };
+
+module.exports = timeago;

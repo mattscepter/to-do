@@ -1,14 +1,14 @@
-import { Router } from "express";
-import auth from "./auth.routes";
-import index from "./index.routes";
-import links from "./links.routes";
-import user from "./user.routes";
+const auth = require('./auth.routes');
+const index = require('./index.routes');
+const links = require('./links.routes');
+const user = require('./user.routes');
 
-const router = Router();
+const express = require('express');
+const router = express.Router();
 
 router.use(index);
 router.use(auth);
 router.use(user);
-router.use("/links", links);
+router.use('/links', links);
 
-export default router;
+module.exports = router;

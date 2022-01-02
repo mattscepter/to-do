@@ -1,7 +1,7 @@
 /**
  * Importing the Main App
  */
-import app from "./app";
+const app = require('./app');
 
-app.listen(app.get("port"));
-console.log("Server is in port", app.get("port"));
+app.listen(app.get('port'));
+console.log('Server is in port', app.get('port'));
